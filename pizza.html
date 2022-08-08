@@ -1,0 +1,69 @@
+@{
+    ViewBag.Title = "Pizza";
+}
+@Styles.Render("~/Content/chat.css")
+
+<script>
+     var model = JSON.parse('@Html.Raw(Json.Encode(Model))');
+</script>
+
+<h2>Pizza</h2>
+
+<button id="createPizza">Créer Pizza</button>
+
+<!-- todo form création pizza -->
+<!-- todo form modif pizza -->
+
+<div id="divFormPizza" class="hidden">
+    <form>
+        <h3></h3>
+        <label for="name">Nom Pizza: </label>
+        <input type="text" name="name" id="name" required><br />
+
+        <label for="pate">Pate: </label>
+        <select name="pate" id="pate" required>
+            <option value="" class="hidden"></option>
+        </select>
+        <br />
+
+        <label for="ingredient">Ingrédient(s): </label>
+        <select name="ingredient" id="ingredient" required multiple>
+            <option value="" class="hidden"></option>
+        </select>
+        <br />
+
+        <button id="cancelButton" type="reset" value="Reset">Annuler</button>
+    </form>
+    <button id="createButtonForm"></button>
+</div>
+
+<h2>Liste des pizzas disponibles :</h2>
+
+<div id="divEmptyList" class="hidden">
+    <h2>Pas de Pizza!</h2>
+</div>
+
+<!-- todo élément pour afficher liste pizza-->
+
+<div>
+
+    <div id="divLstPizza" class="hidden">
+        <h3 data-prop="Nom" data-src="text"></h3>
+        <div>
+            <div data-prop="Pate" data-src="model" class="hidden">
+                <h4>Pate :</h4>
+                <p data-prop="Nom" data-src="text"></p>
+            </div>
+        </div>
+        <div>
+            <h4>Ingredient(s) :</h4>
+            <div data-prop="Ingredients" data-src="model" class="hidden">
+                <p data-prop="Nom" data-src="text"></p>
+            </div>
+        </div>
+        <button data-prop="Id" data-src="name" name="" onclick="updatePizza(this)">Modifier Pizza</button>
+    </div>
+
+</div>
+
+@Scripts.Render("~/Scripts/pizza.js")
