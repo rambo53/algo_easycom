@@ -15,7 +15,7 @@
 <!-- todo form modif pizza -->
 
 <div id="divFormPizza" class="hidden">
-    <form>
+    <form id="formPizza">
         <h3></h3>
         <label for="name">Nom Pizza: </label>
         <input type="text" name="name" id="name" required><br />
@@ -34,7 +34,7 @@
 
         <button id="cancelButton" type="reset" value="Reset">Annuler</button>
     </form>
-    <button id="createButtonForm"></button>
+    <button id="createButtonForm" name="0"></button>
 </div>
 
 <h2>Liste des pizzas disponibles :</h2>
@@ -43,16 +43,14 @@
     <h2>Pas de Pizza!</h2>
 </div>
 
-<!-- todo élément pour afficher liste pizza-->
-
-<div>
+<div id="divPizzas">
 
     <div id="divLstPizza" class="hidden">
         <h3 data-prop="Nom" data-src="text"></h3>
         <div>
             <div data-prop="Pate" data-src="model" class="hidden">
                 <h4>Pate :</h4>
-                <p data-prop="Nom" data-src="text"></p>
+                <p name="pate" data-prop="Nom" data-src="text"></p>
             </div>
         </div>
         <div>
