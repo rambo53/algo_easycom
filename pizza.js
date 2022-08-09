@@ -28,10 +28,8 @@ window.onload = function () {
 
 // listener pour afficher mon form de création de pizza
 document.getElementById("createPizza").addEventListener('click', () => {
-    const formPizza = document.getElementById("divFormPizza");
-    formPizza.querySelector("h3").textContent = "Créé votre pizza :";
-    formPizza.querySelector("#createButtonForm").textContent = "Créer";
-    formPizza.classList.remove("hidden");
+    insertTitleValueBtn("Créé votre pizza :", "Créer");
+    document.querySelector("#divFormPizza").classList.remove("hidden");
 });
 
 // listener pour enregistrer ma pizza
@@ -58,6 +56,7 @@ document.getElementById("createButtonForm").addEventListener('click', () => {
 
     // instanciation obj Pizza
     const newPizza = {
+        'Id': formPizza.querySelector("#createButtonForm").getAttribute("name"),
         'Nom': formPizza.querySelector("#name").value,
         'Pate': pate,
         'Ingredients': lstIng
@@ -65,7 +64,13 @@ document.getElementById("createButtonForm").addEventListener('click', () => {
 
     postFetch("/Home/registerNewPizza/", newPizza, function (data) {
         const divLstPizzas = document.getElementById("divLstPizza");
+        document.getElementById("formPizza").reset();
+
+        const lstToRemove = divLstPizzas.parentNode.querySelectorAll('.clone');
+        lstToRemove.forEach(el => el.remove());
+
         document.querySelector("#divEmptyList").classList.add("hidden");
+
         showElements(divLstPizzas, data);
     })
 });
@@ -75,11 +80,40 @@ document.getElementById("cancelButton").addEventListener('click', (el) => {
     el.target.closest("#divFormPizza").classList.add("hidden");
 });
 
+// fonction pour modifier une pizza qui se charge d'afficher et d'alimenter
+// les inputs de mon form
+function updatePizza(el) {
+
+    getFetch("Home/getPizzaById/" + el.getAttribute("name"), function (data) {
+        const formPizza = document.querySelector("#divFormPizza");
+
+        insertTitleValueBtn("Modifier la pizza " + data.Nom + " :", "Modifier");
+        formPizza.querySelector("#createButtonForm").setAttribute("name", data.Id);
+        formPizza.querySelector('#name').value = data.Nom;
+        formPizza.querySelector('#pate').value = data.Pate.Id;
+
+        const lstIng = getLstIngId(data.Ingredients);
+
+        Array.from(formPizza.querySelector('#ingredient').options).forEach(function (option) {
+            option.selected = lstIng.includes(option.value);
+        });
+
+        formPizza.classList.remove("hidden");
+    });
+}
+
+// retourne un tableau contenant les id de mes ingrédients au format str
+function getLstIngId(lstIng) {
+    let lstIngId = [];
+    lstIng.forEach(ing => lstIngId.push(String(ing.Id)));
+    return lstIngId;
+}
+
 // fonction pour alimenter mes input select dans mon form de pizza
 function showSelect(datas, elt) {
 
     for (let i = 0; i < datas.length; i++) {
-        let elClone = elt.cloneNode(true);
+        const elClone = elt.cloneNode(true);
 
         elClone.setAttribute("value", datas[i].Id);
         elClone.textContent = datas[i].Nom;
@@ -87,6 +121,12 @@ function showSelect(datas, elt) {
         elt.parentNode.append(elClone);
         elClone.classList.remove("hidden");
     }
+}
+
+function insertTitleValueBtn(title, valueBtn) {
+    const formPizza = document.getElementById("divFormPizza");
+    formPizza.querySelector("h3").textContent = title;
+    formPizza.querySelector("#createButtonForm").textContent = valueBtn;
 }
 
 // fonction pour instancier une liste d'obj Ingredient en associant 
