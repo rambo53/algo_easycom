@@ -1,3 +1,33 @@
+function showElements(el, datas) {
+    if (datas.length) {
+        for (let j = 0; j < datas.length; j++) {
+            let data = datas[j];
+            showValues(el, data);
+        };
+    }
+    else {
+        showValues(el, datas);
+    }
+}
+
+function showValues(el, data) {
+    const elClone = el.cloneNode(true);
+    const lstKeys = Object.keys(data);
+
+    lstKeys.forEach(key => {
+        let eltToBind = Array.from(elClone.querySelectorAll("[data-prop="+key+"]"));
+        eltToBind.forEach(elt => {
+            let whereInsert = elt.getAttribute("data-src");
+            switch (whereInsert) {
+                case "text": elt.textContent = data[key];
+                    break;
+            }
+        });
+    });
+    el.parentNode.append(elClone);
+    elClone.classList.remove("hidden");
+}
+
 
 // fonction qui récupère l'élément à valoriser et les datas, 
 // les datas peuvent être sous forme de tableau ou une data unique
